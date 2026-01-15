@@ -1,0 +1,7 @@
+{
+  "name": "DevuCaption: Expert LoRa Annotator",
+  "description": "A professional-grade tool for generating detailed, culturally accurate image captions for AI training datasets (LoRa/Stable Diffusion), specializing in Indian attire and jewelry. Created by Devgghya Kulshrestha.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
