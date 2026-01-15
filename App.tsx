@@ -265,65 +265,67 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* API Key Input Modal (centered with overlay) */}
-        {showApiKeyInput && (
-          <>
-            <div
-              onClick={() => setShowApiKeyInput(false)}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-            />
+        {/* API Key Input Modal moved below header for proper centering */}
+      </header>
 
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4">
-              <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl transform transition-all animate-in zoom-in">
-                <h3 className="text-lg sm:text-xl font-bold text-white mb-3 flex items-center gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                  Custom Gemini API Key
-                </h3>
+      {/* API Key Input Modal (centered with overlay) - placed after header to ensure correct centering */}
+      {showApiKeyInput && (
+        <>
+          <div
+            onClick={() => setShowApiKeyInput(false)}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+          />
 
-                <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-                  Enter your own Google Gemini API key to bypass shared rate limits. Your key is stored locally in your browser.
-                </p>
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4">
+            <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl transform transition-all animate-in zoom-in">
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3 flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                Custom Gemini API Key
+              </h3>
 
-                <input
-                  type="password"
-                  value={apiKey}
-                  onChange={handleApiKeyChange}
-                  placeholder="Enter your Google Gemini API key"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors mb-4"
-                />
+              <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+                Enter your own Google Gemini API key to bypass shared rate limits. Your key is stored locally in your browser.
+              </p>
 
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-2">
-                  <a
-                    href="https://aistudio.google.com/app/apikey"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-blue-400 hover:text-blue-300 hover:underline"
+              <input
+                type="password"
+                value={apiKey}
+                onChange={handleApiKeyChange}
+                placeholder="Enter your Google Gemini API key"
+                className="w-full bg-slate-950 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors mb-4"
+              />
+
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-2">
+                <a
+                  href="https://aistudio.google.com/app/apikey"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-blue-400 hover:text-blue-300 hover:underline"
+                >
+                  Get API Key
+                </a>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setShowApiKeyInput(false)}
+                    className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold rounded-2xl transition-colors"
                   >
-                    Get API Key
-                  </a>
-
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => setShowApiKeyInput(false)}
-                      className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold rounded-2xl transition-colors"
-                    >
-                      Close
-                    </button>
-                    <button
-                      onClick={() => { setShowApiKeyInput(false); }}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-2xl transition-colors"
-                    >
-                      Save
-                    </button>
-                  </div>
+                    Close
+                  </button>
+                  <button
+                    onClick={() => { setShowApiKeyInput(false); }}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-2xl transition-colors"
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
-          </>
-        )}
-      </header>
+          </div>
+        </>
+      )}
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 pt-32 pb-20">
