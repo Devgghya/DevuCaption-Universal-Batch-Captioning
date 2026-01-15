@@ -173,7 +173,7 @@ MIT License - feel free to use this project for personal or commercial purposes.
 ## 👨‍💻 Created By
 
 **Devgghya Kulshrestha**  
-[GitHub](https://github.com/Devgghya) | [Portfolio](https://devgghya.github.io)
+[GitHub](https://github.com/Devgghya) | [Portfolio](https://devu.is-great.net)
 
 ---
 
