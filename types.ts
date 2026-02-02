@@ -22,6 +22,11 @@ export enum CaptionLength {
   VERY_LONG = 'VERY_LONG'
 }
 
+export enum AIProvider {
+  GEMINI = 'GEMINI',
+  GROQ = 'GROQ'
+}
+
 export interface BatchItem {
   id: string;
   file: File;
