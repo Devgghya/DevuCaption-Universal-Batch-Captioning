@@ -3,6 +3,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { AppStatus, BatchItem, CaptionLength, AIProvider } from './types';
 import { annotateImage as annotateImageGemini } from './services/geminiService';
 import { annotateImage as annotateImageGroq } from './services/groqService';
+import { annotateImage as annotateImageNvidia } from './services/nvidiaService';
 import Uploader from './components/Uploader';
 import BulkItem from './components/BulkItem';
 import JSZip from 'jszip';
@@ -20,13 +21,14 @@ const App: React.FC = () => {
   // AI Provider State
   const [selectedProvider, setSelectedProvider] = useState<AIProvider>(() => {
     const saved = localStorage.getItem('ai_provider');
-    return (saved === AIProvider.GROQ || saved === AIProvider.GEMINI) ? saved as AIProvider : AIProvider.GEMINI;
+    return (saved === AIProvider.GROQ || saved === AIProvider.GEMINI || saved === AIProvider.NVIDIA) ? saved as AIProvider : AIProvider.NVIDIA;
   });
 
   // API Key State
   const [apiKey, setApiKey] = useState<string>(() => localStorage.getItem('gemini_api_key') || '');
   const [groqApiKey, setGroqApiKey] = useState<string>(() => localStorage.getItem('groq_api_key') || '');
-  const [showApiKeyInput, setShowApiKeyInput] = useState(() => !localStorage.getItem('gemini_api_key'));
+  const [nvidiaApiKey, setNvidiaApiKey] = useState<string>(() => localStorage.getItem('nvidia_api_key') || '');
+  const [showApiKeyInput, setShowApiKeyInput] = useState(() => !localStorage.getItem('nvidia_api_key'));
 
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -80,7 +82,9 @@ const App: React.FC = () => {
 
           // Call appropriate AI service based on selected provider
           let caption: string;
-          if (selectedProvider === AIProvider.GROQ) {
+          if (selectedProvider === AIProvider.NVIDIA) {
+            caption = await annotateImageNvidia(base64Data, item.file.type, selectedLength, nvidiaApiKey);
+          } else if (selectedProvider === AIProvider.GROQ) {
             caption = await annotateImageGroq(base64Data, item.file.type, selectedLength, groqApiKey);
           } else {
             // Gemini provider
@@ -150,6 +154,11 @@ const App: React.FC = () => {
       }
     } else {
       // Validation for AI mode - check appropriate API key based on provider
+      if (selectedProvider === AIProvider.NVIDIA && !nvidiaApiKey) {
+        setShowApiKeyInput(true);
+        alert("Please configure your Nvidia API Key first.");
+        return;
+      }
       if (selectedProvider === AIProvider.GEMINI && !apiKey) {
         setShowApiKeyInput(true);
         alert("Please configure your Google Gemini API Key first.");
@@ -167,6 +176,11 @@ const App: React.FC = () => {
   const handleRegenerateSelected = async () => {
     // Check API key based on selected provider
     if (!useSamePrompt) {
+      if (selectedProvider === AIProvider.NVIDIA && !nvidiaApiKey) {
+        setShowApiKeyInput(true);
+        alert("Please configure your Nvidia API Key first.");
+        return;
+      }
       if (selectedProvider === AIProvider.GEMINI && !apiKey) {
         setShowApiKeyInput(true);
         alert("Please configure your Google Gemini API Key first.");
@@ -271,6 +285,12 @@ const App: React.FC = () => {
     localStorage.setItem('groq_api_key', val);
   };
 
+  const handleNvidiaApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setNvidiaApiKey(val);
+    localStorage.setItem('nvidia_api_key', val);
+  };
+
   const handleCustomPromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const val = e.target.value;
     setCustomPrompt(val);
@@ -320,6 +340,18 @@ const App: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-4">
+            {selectedProvider === AIProvider.NVIDIA && (
+              <button
+                onClick={() => setShowApiKeyInput(!showApiKeyInput)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border ${nvidiaApiKey ? 'bg-orange-500/10 text-orange-400 border-orange-500/30 hover:bg-orange-500/20' : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-white hover:border-slate-500'
+                  }`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                {nvidiaApiKey ? 'Nvidia API Key Set' : 'Set Nvidia Key'}
+              </button>
+            )}
             {selectedProvider === AIProvider.GEMINI && (
               <button
                 onClick={() => setShowApiKeyInput(!showApiKeyInput)}
@@ -375,11 +407,13 @@ const App: React.FC = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
-                {selectedProvider === AIProvider.GEMINI ? 'Gemini API Key' : 'Groq API Key'}
+                {selectedProvider === AIProvider.NVIDIA ? 'Nvidia API Key' : selectedProvider === AIProvider.GEMINI ? 'Gemini API Key' : 'Groq API Key'}
               </h3>
 
               <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-                {selectedProvider === AIProvider.GEMINI
+                {selectedProvider === AIProvider.NVIDIA
+                  ? 'Enter your own Nvidia API key. Your key is stored locally in your browser.'
+                  : selectedProvider === AIProvider.GEMINI
                   ? 'Enter your own Google Gemini API key to bypass shared rate limits. Your key is stored locally in your browser.'
                   : 'Enter your Groq API key to use Llama 4 vision model. Your key is stored locally in your browser.'
                 }
@@ -387,22 +421,24 @@ const App: React.FC = () => {
 
               <input
                 type="password"
-                value={selectedProvider === AIProvider.GEMINI ? apiKey : groqApiKey}
-                onChange={selectedProvider === AIProvider.GEMINI ? handleApiKeyChange : handleGroqApiKeyChange}
-                placeholder={`Enter your ${selectedProvider === AIProvider.GEMINI ? 'Google Gemini' : 'Groq'} API key`}
+                value={selectedProvider === AIProvider.NVIDIA ? nvidiaApiKey : selectedProvider === AIProvider.GEMINI ? apiKey : groqApiKey}
+                onChange={selectedProvider === AIProvider.NVIDIA ? handleNvidiaApiKeyChange : selectedProvider === AIProvider.GEMINI ? handleApiKeyChange : handleGroqApiKeyChange}
+                placeholder={`Enter your ${selectedProvider === AIProvider.NVIDIA ? 'Nvidia' : selectedProvider === AIProvider.GEMINI ? 'Google Gemini' : 'Groq'} API key`}
                 className="w-full bg-slate-950 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors mb-4"
               />
 
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-2">
                 <a
-                  href={selectedProvider === AIProvider.GEMINI
+                  href={selectedProvider === AIProvider.NVIDIA
+                    ? "https://build.nvidia.com/explore/discover"
+                    : selectedProvider === AIProvider.GEMINI
                     ? "https://aistudio.google.com/app/apikey"
                     : "https://console.groq.com/keys"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-blue-400 hover:text-blue-300 hover:underline"
                 >
-                  Get {selectedProvider === AIProvider.GEMINI ? 'Gemini' : 'Groq'} API Key
+                  Get {selectedProvider === AIProvider.NVIDIA ? 'Nvidia' : selectedProvider === AIProvider.GEMINI ? 'Gemini' : 'Groq'} API Key
                 </a>
 
                 <div className="flex items-center gap-3">
@@ -462,6 +498,20 @@ const App: React.FC = () => {
             <div className="space-y-6 mb-8">
               {/* AI Provider Toggle */}
               <div className="flex justify-center gap-3 animate-in zoom-in duration-500">
+                <button
+                  onClick={() => handleProviderChange(AIProvider.NVIDIA)}
+                  className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 border-2 ${selectedProvider === AIProvider.NVIDIA
+                    ? 'bg-orange-600 text-white border-orange-600 shadow-lg shadow-orange-500/40 scale-105'
+                    : 'bg-slate-900 text-slate-400 border-slate-700 hover:text-slate-200 hover:border-slate-500'
+                    }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Nvidia (Llama 3.2 Vision)
+                  </span>
+                </button>
                 <button
                   onClick={() => handleProviderChange(AIProvider.GEMINI)}
                   className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 border-2 ${selectedProvider === AIProvider.GEMINI

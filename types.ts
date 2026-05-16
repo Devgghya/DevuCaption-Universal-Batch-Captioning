@@ -24,7 +24,8 @@ export enum CaptionLength {
 
 export enum AIProvider {
   GEMINI = 'GEMINI',
-  GROQ = 'GROQ'
+  GROQ = 'GROQ',
+  NVIDIA = 'NVIDIA'
 }
 
 export interface BatchItem {
