@@ -1,6 +1,7 @@
 import { CaptionLength } from "../types";
 
-const NVIDIA_API_BASE = "https://integrate.api.nvidia.com/v1";
+// Using a relative proxy path to solve CORS on Vercel and local dev
+const NVIDIA_API_BASE = "/proxy/nvidia";
 const NVIDIA_MODEL = "meta/llama-3.2-90b-vision-instruct";
 
 const getSystemInstruction = (length: CaptionLength) => {

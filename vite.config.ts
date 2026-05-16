@@ -9,6 +9,13 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 3000,
         host: '0.0.0.0',
+        proxy: {
+          '/proxy/nvidia': {
+            target: 'https://integrate.api.nvidia.com/v1',
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/proxy\/nvidia/, '')
+          }
+        }
       },
       build: {
         outDir: 'dist',
