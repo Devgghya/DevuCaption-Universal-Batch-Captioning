@@ -24,14 +24,14 @@ const Uploader: React.FC<UploaderProps> = ({ onImagesSelect, isLoading }) => {
 
   return (
     <div 
-      className={`flex flex-col items-center justify-center p-20 border-4 border-dashed rounded-[3rem] transition-all duration-700 cursor-pointer group relative overflow-hidden ${
+      className={`flex flex-col items-center justify-center p-16 sm:p-20 border-2 border-dashed rounded-[2.5rem] transition-all duration-700 cursor-pointer group relative overflow-hidden ${
         isLoading 
-          ? 'border-slate-800 bg-slate-900/20 cursor-not-allowed shadow-none' 
-          : 'border-slate-700 bg-slate-900/40 hover:bg-slate-900/60 hover:border-blue-500 shadow-2xl hover:shadow-[0_0_80px_rgba(59,130,246,0.15)] active:scale-[0.98]'
+          ? 'border-slate-300 bg-white/60 cursor-not-allowed shadow-none' 
+          : 'border-slate-300 bg-white/70 hover:bg-white hover:border-slate-900 shadow-[0_24px_60px_rgba(15,23,42,0.12)] active:scale-[0.98]'
       }`} 
       onClick={triggerInput}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/0 to-indigo-600/0 group-hover:from-blue-600/5 group-hover:to-indigo-600/5 transition-all duration-700 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-teal-100/0 to-orange-100/0 group-hover:from-teal-100/40 group-hover:to-orange-100/40 transition-all duration-700 pointer-events-none"></div>
       
       <input 
         type="file" 
@@ -43,22 +43,22 @@ const Uploader: React.FC<UploaderProps> = ({ onImagesSelect, isLoading }) => {
         disabled={isLoading}
       />
       
-      <div className={`w-28 h-28 rounded-3xl flex items-center justify-center mb-8 transition-all duration-500 shadow-2xl ${
-        isLoading ? 'bg-slate-800' : 'bg-blue-600 shadow-blue-600/20 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-blue-500/40'
+      <div className={`w-24 h-24 rounded-3xl flex items-center justify-center mb-8 transition-all duration-500 shadow-2xl ${
+        isLoading ? 'bg-slate-200' : 'bg-gradient-to-br from-teal-500 to-orange-500 shadow-teal-500/30 group-hover:scale-110 group-hover:-rotate-3'
       }`}>
-        <svg xmlns="http://www.w3.org/2000/svg" className={`h-14 w-14 transition-all duration-500 ${isLoading ? 'text-slate-600' : 'text-white group-hover:scale-110'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" className={`h-12 w-12 transition-all duration-500 ${isLoading ? 'text-slate-400' : 'text-white group-hover:scale-110'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       </div>
       
-      <h3 className="text-4xl font-black mb-4 tracking-tighter transition-colors group-hover:text-blue-400">Bulk Dataset Upload</h3>
-      <p className="text-slate-400 text-center max-w-sm px-4 text-lg font-medium leading-relaxed group-hover:text-slate-300 transition-colors">
-        Drop your images here or click to start the expert annotation session.
+      <h3 className="text-4xl sm:text-5xl font-black mb-4 tracking-tight text-slate-900 font-display">Bulk Dataset Upload</h3>
+      <p className="text-slate-600 text-center max-w-sm px-4 text-lg font-medium leading-relaxed">
+        Drop your images here or click to launch a high-precision caption run.
       </p>
       
       <div className="mt-12 flex gap-4">
         <button 
-          className={`px-12 py-4 bg-white text-slate-950 hover:bg-blue-500 hover:text-white rounded-[1.5rem] font-black uppercase tracking-widest transition-all duration-500 shadow-2xl flex items-center gap-3 active:scale-95 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'group-hover:translate-y-[-4px]'}`}
+          className={`px-12 py-4 bg-slate-900 text-white hover:bg-slate-800 rounded-[1.5rem] font-black uppercase tracking-widest transition-all duration-500 shadow-2xl flex items-center gap-3 active:scale-95 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'group-hover:-translate-y-1'}`}
           disabled={isLoading}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 font-bold" viewBox="0 0 20 20" fill="currentColor">

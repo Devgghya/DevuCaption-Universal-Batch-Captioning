@@ -8,21 +8,32 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --paper: #f7f1e7;
+            --ink: #1f2937;
+            --teal: #0f766e;
+            --coral: #f97316;
+            --sun: #facc15;
+        }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(180deg, #fbf7f0 0%, #f7f1e7 55%, #f4ede2 100%);
+            color: var(--ink);
+        }
+        .font-display {
+            font-family: 'Fraunces', 'Space Grotesk', serif;
+            letter-spacing: -0.02em;
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.1);
+            background: rgba(15, 23, 42, 0.08);
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(51, 65, 85, 0.5);
+            background: rgba(15, 23, 42, 0.35);
             border-radius: 10px;
         }
     </style>
